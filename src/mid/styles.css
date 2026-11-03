@@ -1,0 +1,624 @@
+/* 변수 정리  */
+:root {
+  --bg-page: #ffffff;
+  --bg-intro: #fffbf5;
+  --bg-intro-desktop: #fffbf5;
+  --bg-works: #ffffff;
+  --bg-works-desktop: #fbfbfb;
+  --text-black: #000000;
+  --text-white: #ffffff;
+  --text-muted: #5d6156;
+  --accent: #a6ff00;
+  --shadow: 0 4px 10px #b8b2a9;
+
+  --font-sans: "inter", "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+  --font-serif-italic: "Baskervville", serif;
+  --font-pixel: "Jacquard 12", serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body * {
+  letter-spacing: -0.05em;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+/* 요소들을 위에서 아래로 세로로 배치  */
+body {
+  background: var(--bg-page);
+  font-family: var(--font-sans);
+  font-weight: 400;
+  color: var(--text-black);
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  overflow-x: hidden;
+}
+/* 요소들을 위에서 아래로 세로로 배치  */
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+
+h1,
+h2,
+p,
+figure {
+  margin: 0;
+}
+
+img {
+  display: block;
+}
+
+/* ========================================================
+   HERO — mobile (375)
+=======================================================*/
+.hero {
+  position: relative;
+  height: 900px;
+  overflow: hidden;
+  display: grid;
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
+  /* Pile 패턴: 배경 레이어와 콘텐츠 그리드를 같은 셀(1/1)에 겹쳐 쌓음 */
+}
+.hero-bg,
+.hero-grid {
+  grid-area: 1 / 1;
+  /*배경 레이어랑 콘텐츠 그리드를
+둘 다 같은 칸에 겹치기  */
+}
+
+.hero-bg {
+  /* 세 레이아웃 공통 배경 1장 → 화면 폭이 바뀌어도 배경이 연속적으로 변함 */
+  background: url("https://github.com/eldaink1404/assets/blob/main/assets/hero.jpg?raw=true")
+    center / cover no-repeat;
+}
+
+.hero-grid {
+  position: relative;
+  z-index: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(9, minmax(0, 1fr));
+  /* 2열 9행 */
+  column-gap: 30px;
+  row-gap: 10px;
+  padding: 10px 0 0 10px;
+  color: var(--text-white);
+  font-weight: 500;
+}
+
+/* 메인 타이포: 모바일에서는 90° 회전(세로쓰기) */
+.main-typo {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: start;
+  justify-self: start;
+  writing-mode: vertical-rl;
+  /*위→아래로 흐르는 세로쓰기 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: min(506px, 134.93vw);
+  padding: 10px 20px;
+  font-size: clamp(
+    96px,
+    34.133vw,
+    128px
+  ); /* 375 기준 128px, 더 좁으면 비례 축소 */
+  font-weight: 500;
+  line-height: 0.92;
+  white-space: nowrap;
+  position: relative;
+  z-index: 1;
+}
+
+.ch-a {
+  font-family: var(--font-serif-italic);
+  font-style: italic;
+  font-weight: 400;
+  /* 변수 써서 메인타이포 다른폰트 적용 */
+}
+.ch-e {
+  font-family: var(--font-pixel);
+  font-weight: 400;
+  /*메인타이포 다른폰트 적용 */
+}
+
+.hero-title {
+  /*Yoshida Yuni : Alchemy */
+  grid-column: 2;
+  grid-row: 2;
+  align-self: stretch;
+  padding: 0 10px;
+  font-size: clamp(
+    24px,
+    8.5333vw,
+    32px
+  ); /* 메인 타이포와 같은 비율(375 기준 32px) */
+  line-height: 0.92;
+  text-align: right;
+}
+
+.hero-subtitle {
+  /*요시다 유니 개인전  */
+  grid-column: 2;
+  grid-row: 3;
+  align-self: start;
+  justify-self: end;
+  height: 42px;
+  padding: 10px;
+  color: var(--accent);
+  font-size: clamp(18px, 6.4vw, 24px); /* 375 기준 24px */
+  line-height: 0.92;
+  white-space: nowrap;
+}
+
+.hero-desc {
+  max-width: 28.3ch; /* ≈250px, 본문 한 줄 길이 제한 */
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.1em;
+  text-align: justify;
+}
+
+/* 본문 1문단: 왼쪽 열 하단에 붙임 */
+.hero-desc-1 {
+  grid-column: 1;
+  grid-row: 6;
+  align-self: end;
+}
+
+/* 본문 2문단: 2열을 걸쳐 바로 아래 행 */
+.hero-desc-2 {
+  grid-column: 1 / -1;
+  grid-row: 7;
+  align-self: start;
+}
+
+.sub-typo {
+  grid-column: 1;
+  grid-row: 9;
+  align-self: end;
+  justify-self: stretch;
+  padding: 38px 10px;
+  font-size: 16px;
+  line-height: 0.92;
+  white-space: nowrap;
+}
+
+.meta-info {
+  grid-column: 2;
+  grid-row: 8 / span 2;
+  /*8행부터 2칸*/
+  height: 100%;
+  width: auto;
+  aspect-ratio: 1 / 1;
+  /* 정사각형 비율 유지  */
+  justify-self: end;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  /* 2×2 그리드 */
+}
+
+.meta-cell {
+  background: #fff;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 500;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /*글자 정가운데 정렬*/
+}
+
+.meta-date {
+  grid-column: 2;
+  grid-row: 1;
+  line-height: 0.92;
+}
+
+.meta-place {
+  grid-column: 1;
+  grid-row: 2;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   INTRO — mobile
+   ========================================================= */
+.intro {
+  position: relative;
+  z-index: 1;
+  background: var(--bg-intro);
+  box-shadow: var(--shadow);
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.intro-label {
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 0.92;
+}
+
+.intro-heading {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 0.92;
+}
+
+.intro-body {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.intro-img {
+  width: 100%;
+  aspect-ratio: 800 / 569;
+  object-fit: cover;
+}
+
+.intro-text {
+  font-size: 14px;
+  line-height: 1.1;
+  text-align: justify;
+}
+
+/* =========================================================
+   WORKS — mobile
+   ========================================================= */
+.works {
+  background: var(--bg-works);
+  padding: 100px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 100px;
+}
+
+.works-title {
+  width: 100%;
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 0.92;
+}
+
+.works-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  /* 1열 그리드  */
+  row-gap: 30px;
+  column-gap: 10px;
+}
+
+.preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  align-self: start;
+  justify-self: stretch;
+  max-width: 100%;
+}
+
+.preview > img {
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  /* 이미지 비율 유지  */
+}
+
+.preview figcaption {
+  width: 100%;
+  max-width: 280px;
+  contain: inline-size; /* 캡션이 이미지보다 넓어지지 않고 이미지 폭 안에서 줄바꿈 */
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1;
+  text-align: center;
+}
+
+/* =========================================================
+   TABLET (768)
+   ========================================================= */
+@media (min-width: 600px) {
+  /* --- hero --- */
+  .hero {
+    height: 1024px;
+  }
+
+  .hero-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: auto minmax(0, 0.2fr) repeat(3, minmax(0, 1fr));
+    /* 4열 그리드  */
+    column-gap: 30px;
+    row-gap: 10px;
+    padding: 30px 0 0 30px;
+  }
+
+  .main-typo {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    justify-self: center;
+    writing-mode: horizontal-tb;
+    height: auto;
+    padding: 0 23px;
+    font-size: clamp(
+      110px,
+      23.4375vw,
+      180px
+    ); /* 768 기준 180px, 화면 너비에 비례 */
+  }
+
+  .hero-title {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    align-self: start;
+    padding: 0;
+    font-size: clamp(32px, 6.25vw, 48px);
+    white-space: nowrap;
+    text-align: center;
+  }
+
+  .hero-subtitle {
+    grid-column: 2 / span 2;
+    grid-row: 3;
+    justify-self: stretch;
+    height: auto;
+    padding: 0;
+    font-size: 24px; /* 부제는 모든 레이아웃에서 24px(피그마 동일) → 전환 시 크기 연속 */
+    text-align: center;
+  }
+
+  .hero-desc {
+    font-size: 16px;
+    line-height: 1.1;
+    letter-spacing: -0.05em;
+  }
+  .hero-desc-1 {
+    grid-column: 1;
+    grid-row: 4;
+    align-self: center;
+    max-width: none;
+  }
+  .hero-desc-2 {
+    grid-column: 2 / span 2;
+    grid-row: 5;
+    align-self: start;
+    max-width: 49.5ch; /* ≈500px */
+  }
+
+  .sub-typo {
+    grid-column: 1;
+    grid-row: 5;
+    justify-self: start;
+    font-size: 32px;
+  }
+
+  .meta-info {
+    grid-column: 4;
+    grid-row: 5;
+  }
+
+  .meta-cell {
+    font-size: 20px;
+  }
+
+  /* --- intro --- */
+  .intro {
+    padding: 50px;
+  }
+  .intro-label {
+    font-size: 32px;
+  }
+  .intro-heading {
+    font-size: 36px;
+    font-weight: 700;
+  }
+  .intro-text {
+    font-size: 20px;
+  }
+
+  /* --- works --- */
+  .works-title {
+    width: auto;
+    white-space: nowrap;
+    text-align: center;
+  }
+  .works-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(4, minmax(0, 1fr));
+    height: 1962px;
+    row-gap: 10px;
+  }
+  .preview figcaption {
+    font-size: 14px;
+  }
+
+  /* 높이 400px 기준 원본 폭, 공간이 부족하면 비율 유지한 채 축소 */
+  .preview1 {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    justify-self: start;
+  }
+  .preview1 > img {
+    width: 590px;
+  }
+
+  .preview2 {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-self: end;
+  }
+  .preview2 > img {
+    width: 546px;
+  }
+
+  .preview3 {
+    grid-column: 1;
+    grid-row: 3;
+    justify-self: start;
+  }
+  .preview3 > img {
+    width: 288px;
+  }
+
+  .preview4 {
+    grid-column: 1 / -1;
+    grid-row: 4;
+    justify-self: end;
+  }
+  .preview4 > img {
+    width: 562px;
+  }
+}
+
+/* =========================================================
+   DESKTOP (1440)
+   ========================================================= */
+@media (min-width: 900px) {
+  /* --- hero --- */
+  .hero {
+    height: 900px;
+  }
+
+  .hero-grid {
+    row-gap: 30px;
+    /* 1440에서 300px → 비례 축소 (900px에서 187.5px), 최소 180px = 태블릿 타이포 최대 크기 */
+    --typo-size: clamp(180px, 20.8333vw, 300px);
+  }
+
+  .main-typo {
+    justify-self: start;
+    font-size: var(--typo-size);
+  }
+
+  .hero-title {
+    grid-column: 1 / span 3;
+    justify-self: start;
+    /* 전환 직전(899px) 태블릿 타이틀이 이미 48px이므로 데스크탑은 48px 유지 */
+    font-size: 48px;
+    text-align: left;
+  }
+
+  .hero-subtitle {
+    grid-column: 1 / span 2;
+    text-align: left;
+  }
+
+  .hero-desc-1 {
+    align-self: start;
+  }
+
+  /* 본2문단: 2열부터 끝까지의 영역에서 최대 49.5ch(≈500px),
+   오른쪽 날짜·장소 블록(데스크탑 구간 최대 391px) + 간격 30px만큼은 비워 둠 */
+  .hero-desc-2 {
+    grid-column: 2 / -1;
+    justify-self: start;
+    width: min(49.5ch, calc(100% - 421px));
+  }
+
+  .meta-info {
+    grid-column: 4;
+    grid-row: 4 / span 2;
+  }
+
+  .meta-cell {
+    font-size: 24px;
+  }
+
+  /* --- intro --- */
+  .intro {
+    background: var(--bg-intro-desktop);
+    padding: 50px min(150px, 10.4167vw); /* 1440 기준 150px */
+  }
+
+  .intro-heading {
+    font-weight: 600;
+  }
+
+  .intro-body {
+    flex-direction: row;
+    /*가로 정렬  */
+    align-items: center;
+  }
+
+  .intro-img {
+    flex: 0 1 500px;
+    min-width: 0;
+    width: 500px;
+    height: auto;
+    aspect-ratio: 500 / 356;
+  }
+
+  .intro-text {
+    flex: 1 1 0;
+    min-width: 240px;
+    max-width: 47.5ch; /* ≈600px */
+  }
+
+  /* --- works --- */
+  .works {
+    background: var(--bg-works-desktop);
+  }
+
+  .works-grid {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-rows: repeat(5, minmax(0, 1fr));
+    /*5x5 그리드  */
+    width: calc(100% + 60px);
+    margin: 0 -30px;
+    padding: 0 min(100px, 6.9444vw);
+    height: min(1922px, 133.4722vw);
+  }
+
+  .preview1 > img {
+    width: min(590px, 40.9722vw);
+  }
+  .preview2 > img {
+    width: min(546px, 37.9167vw);
+  }
+  .preview3 > img {
+    width: min(288px, 20vw);
+  }
+  .preview4 > img {
+    width: min(562px, 39.0278vw);
+  }
+
+  .preview1 {
+    grid-column: 1 / span 3;
+    grid-row: 1;
+  }
+  .preview2 {
+    grid-column: 3 / span 3;
+    grid-row: 2;
+  }
+  .preview3 {
+    grid-column: 1 / span 2;
+    grid-row: 3;
+  }
+  .preview4 {
+    grid-column: 2 / span 3;
+    grid-row: 4;
+  }
+}
