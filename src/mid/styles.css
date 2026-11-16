@@ -1,4 +1,15 @@
-/* 변수 정리  */
+/* =========================================================
+   Figma: midterm / desktop-1440 · tablet-768 · mobile-375
+   구조: 모바일 우선 → 600px(태블릿) → 900px(데스크탑)
+     · 0 ~ 599px: 기본 CSS (모바일)
+     · 600 ~ 899px: @media (min-width: 600px) (태블릿)
+     · 900px ~: @media (min-width: 900px) (데스크탑, 태블릿 블록도 함께 적용)
+   분기점 근거: 실측상 데스크탑 레이아웃은 855px, 태블릿 레이아웃은 530px까지
+   요소가 겹치지 않음 → 그보다 여유 있게 600 / 900으로 지정
+   날짜·장소 블록(meta-info)은 피그마 세로 Fill: 차지한 행 높이에 맞춘 정사각형
+   메인 타이포·타이틀은 vw 비례 + clamp()로 최소·최대 크기 제한
+   ========================================================= */
+
 :root {
   --bg-page: #ffffff;
   --bg-intro: #fffbf5;
@@ -11,7 +22,7 @@
   --accent: #a6ff00;
   --shadow: 0 4px 10px #b8b2a9;
 
-  --font-sans: "inter", "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+  --font-sans: "Inter", "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
   --font-serif-italic: "Baskervville", serif;
   --font-pixel: "Jacquard 12", serif;
 }
@@ -22,6 +33,7 @@
   box-sizing: border-box;
 }
 
+/* Figma 전체 자간: -5% */
 body * {
   letter-spacing: -0.05em;
 }
@@ -31,7 +43,7 @@ body {
   margin: 0;
   padding: 0;
 }
-/* 요소들을 위에서 아래로 세로로 배치  */
+
 body {
   background: var(--bg-page);
   font-family: var(--font-sans);
@@ -41,8 +53,15 @@ body {
   flex-direction: column;
   gap: 50px;
   overflow-x: hidden;
+  /* 한글 줄바꿈: 단어(어절) 중간에서 끊기지 않게 (영어에는 영향 없음) */
+  word-break: keep-all;
 }
-/* 요소들을 위에서 아래로 세로로 배치  */
+
+/* 문단 마지막 줄에 한 단어만 남는 것을 줄여 주는 줄바꿈 옵션 */
+p {
+  text-wrap: pretty;
+}
+
 main {
   display: flex;
   flex-direction: column;
@@ -60,28 +79,28 @@ img {
   display: block;
 }
 
-/* ========================================================
+/* =========================================================
    HERO — mobile (375)
-=======================================================*/
+   ========================================================= */
 .hero {
   position: relative;
   height: 900px;
   overflow: hidden;
+  /* Pile 패턴: 배경 레이어와 콘텐츠 그리드를 같은 셀(1/1)에 겹쳐 쌓음 */
   display: grid;
   grid-template: minmax(0, 1fr) / minmax(0, 1fr);
-  /* Pile 패턴: 배경 레이어와 콘텐츠 그리드를 같은 셀(1/1)에 겹쳐 쌓음 */
 }
+
 .hero-bg,
 .hero-grid {
   grid-area: 1 / 1;
-  /*배경 레이어랑 콘텐츠 그리드를
-둘 다 같은 칸에 겹치기  */
 }
 
 .hero-bg {
-  /* 세 레이아웃 공통 배경 1장 → 화면 폭이 바뀌어도 배경이 연속적으로 변함 */
-  background: url("https://github.com/eldaink1404/assets/blob/main/assets/hero.jpg?raw=true")
-    center / cover no-repeat;
+  /* 세 레이아웃 공통 배경 1장 (rgba(0,0,0,.2) 오버레이 포함, 2880×1800)
+     이미지를 갈아끼우지 않고 cover + center만으로 각 피그마 프레임 구도를 재현 →
+     화면 폭이 바뀌어도 배경이 끊기지 않고 연속적으로 변함 */
+  background: url("assets/hero.jpg") center / cover no-repeat;
 }
 
 .hero-grid {
@@ -91,7 +110,6 @@ img {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   grid-template-rows: repeat(9, minmax(0, 1fr));
-  /* 2열 9행 */
   column-gap: 30px;
   row-gap: 10px;
   padding: 10px 0 0 10px;
@@ -106,7 +124,6 @@ img {
   align-self: start;
   justify-self: start;
   writing-mode: vertical-rl;
-  /*위→아래로 흐르는 세로쓰기 */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -128,16 +145,14 @@ img {
   font-family: var(--font-serif-italic);
   font-style: italic;
   font-weight: 400;
-  /* 변수 써서 메인타이포 다른폰트 적용 */
 }
+
 .ch-e {
   font-family: var(--font-pixel);
   font-weight: 400;
-  /*메인타이포 다른폰트 적용 */
 }
 
 .hero-title {
-  /*Yoshida Yuni : Alchemy */
   grid-column: 2;
   grid-row: 2;
   align-self: stretch;
@@ -152,7 +167,6 @@ img {
 }
 
 .hero-subtitle {
-  /*요시다 유니 개인전  */
   grid-column: 2;
   grid-row: 3;
   align-self: start;
@@ -166,26 +180,27 @@ img {
 }
 
 .hero-desc {
-  max-width: 28.3ch; /* ≈250px, 본문 한 줄 길이 제한 */
-  font-size: 14px;
+  max-width: 28.3ch; /* 15px 기준 ≈ 270px, 본문 한 줄 길이 제한 */
+  font-size: 15px; /* 한글 본문 최소 15px */
   font-weight: 400;
-  line-height: 1;
-  letter-spacing: -0.1em;
-  text-align: justify;
+  line-height: 1.4; /* 짧은 문단(짧은 호흡) 1.2~1.4 */
+  text-align: left; /* keep-all과 함께 쓰면 양끝 정렬은 단어 사이가 벌어져서 왼쪽 정렬 */
 }
 
-/* 본문 1문단: 왼쪽 열 하단에 붙임 */
+/* 본문 1문단: 2열을 걸쳐 6행 하단에 붙임 (1열만 쓰면 줄바꿈이 너무 빨리 일어남) */
 .hero-desc-1 {
-  grid-column: 1;
+  grid-column: 1 / -1;
   grid-row: 6;
   align-self: end;
 }
 
-/* 본문 2문단: 2열을 걸쳐 바로 아래 행 */
+/* 본문 2문단: 2열을 걸쳐 바로 아래 행
+   폭은 28.3ch까지, 단 오른쪽 날짜 칸(95px) + 간격 10px 앞까지만 */
 .hero-desc-2 {
   grid-column: 1 / -1;
   grid-row: 7;
   align-self: start;
+  max-width: min(28.3ch, calc(100% - 105px));
 }
 
 .sub-typo {
@@ -199,19 +214,18 @@ img {
   white-space: nowrap;
 }
 
+/* 날짜 · 장소 2×2 블록 */
 .meta-info {
   grid-column: 2;
   grid-row: 8 / span 2;
-  /*8행부터 2칸*/
+  /* 피그마 세로 Fill: 높이 = 차지한 그리드 행 높이, 너비 = 높이(정사각형), 칸 오른쪽 정렬 */
   height: 100%;
   width: auto;
   aspect-ratio: 1 / 1;
-  /* 정사각형 비율 유지  */
   justify-self: end;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   grid-template-rows: repeat(2, minmax(0, 1fr));
-  /* 2×2 그리드 */
 }
 
 .meta-cell {
@@ -223,7 +237,6 @@ img {
   display: flex;
   align-items: center;
   justify-content: center;
-  /*글자 정가운데 정렬*/
 }
 
 .meta-date {
@@ -277,9 +290,9 @@ img {
 }
 
 .intro-text {
-  font-size: 14px;
-  line-height: 1.1;
-  text-align: justify;
+  font-size: 15px; /* 한글 본문 최소 15px */
+  line-height: 1.7; /* 긴 본문(긴 호흡) 1.6~1.8 */
+  text-align: left;
 }
 
 /* =========================================================
@@ -305,7 +318,6 @@ img {
   width: 100%;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  /* 1열 그리드  */
   row-gap: 30px;
   column-gap: 10px;
 }
@@ -320,11 +332,11 @@ img {
   max-width: 100%;
 }
 
+/* 작품 이미지는 잘리지 않고 원본 비율 그대로 폭에 맞춰 축소 */
 .preview > img {
   width: 100%;
   max-width: 100%;
   height: auto;
-  /* 이미지 비율 유지  */
 }
 
 .preview figcaption {
@@ -332,7 +344,7 @@ img {
   max-width: 280px;
   contain: inline-size; /* 캡션이 이미지보다 넓어지지 않고 이미지 폭 안에서 줄바꿈 */
   color: var(--text-muted);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 500;
   line-height: 1;
   text-align: center;
@@ -350,7 +362,6 @@ img {
   .hero-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     grid-template-rows: auto minmax(0, 0.2fr) repeat(3, minmax(0, 1fr));
-    /* 4열 그리드  */
     column-gap: 30px;
     row-gap: 10px;
     padding: 30px 0 0 30px;
@@ -375,7 +386,8 @@ img {
     grid-row: 2;
     align-self: start;
     padding: 0;
-    font-size: clamp(32px, 6.25vw, 48px);
+    /* 768에서 48px → 화면이 줄면 직선으로 축소 (600px에서 36.9px), 최소 32px */
+    font-size: clamp(32px, calc(6.6116vw - 2.777px), 48px);
     white-space: nowrap;
     text-align: center;
   }
@@ -392,15 +404,17 @@ img {
 
   .hero-desc {
     font-size: 16px;
-    line-height: 1.1;
-    letter-spacing: -0.05em;
+    line-height: 1.3; /* 짧은 문단 1.2~1.4 범위, 히어로 칸 안에 들어가도록 1.3 */
   }
+
+  /* 1문단: 1~2열 두 칸에서 최대 34ch(≈340px) */
   .hero-desc-1 {
-    grid-column: 1;
+    grid-column: 1 / span 2;
     grid-row: 4;
     align-self: center;
-    max-width: none;
+    max-width: 34ch;
   }
+
   .hero-desc-2 {
     grid-column: 2 / span 2;
     grid-row: 5;
@@ -428,13 +442,16 @@ img {
   .intro {
     padding: 50px;
   }
+
   .intro-label {
     font-size: 32px;
   }
+
   .intro-heading {
     font-size: 36px;
     font-weight: 700;
   }
+
   .intro-text {
     font-size: 20px;
   }
@@ -445,12 +462,14 @@ img {
     white-space: nowrap;
     text-align: center;
   }
+
   .works-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-template-rows: repeat(4, minmax(0, 1fr));
     height: 1962px;
     row-gap: 10px;
   }
+
   .preview figcaption {
     font-size: 14px;
   }
@@ -530,12 +549,17 @@ img {
     align-self: start;
   }
 
-  /* 본2문단: 2열부터 끝까지의 영역에서 최대 49.5ch(≈500px),
-   오른쪽 날짜·장소 블록(데스크탑 구간 최대 391px) + 간격 30px만큼은 비워 둠 */
+  /* 2문단: 2열부터 끝까지의 영역 안에서, 최대 49.5ch(≈500px)
+     화면이 줄면 날짜·장소 블록 + 간격(30px) 앞까지만 차지하도록 폭이 함께 줄어듦
+     블록 한 변 = 4~5행 높이 = 498.75px − 0.575 × 타이포 크기
+     (히어로 900 − 위 여백 30 − 행 간격 120 − 타이포 줄높이 0.92×크기 를 3.2fr로 나눈 2fr + 간격 30) */
   .hero-desc-2 {
     grid-column: 2 / -1;
     justify-self: start;
-    width: min(49.5ch, calc(100% - 421px));
+    width: min(
+      49.5ch,
+      calc(100% - (498.75px - 0.575 * var(--typo-size)) - 30px)
+    );
   }
 
   .meta-info {
@@ -559,7 +583,6 @@ img {
 
   .intro-body {
     flex-direction: row;
-    /*가로 정렬  */
     align-items: center;
   }
 
@@ -582,12 +605,12 @@ img {
     background: var(--bg-works-desktop);
   }
 
+  /* 작품 그리드는 1440 구성을 그대로 비율 축소 (1px = 100vw/1440) */
   .works-grid {
     grid-template-columns: repeat(5, minmax(0, 1fr));
     grid-template-rows: repeat(5, minmax(0, 1fr));
-    /*5x5 그리드  */
     width: calc(100% + 60px);
-    margin: 0 -30px;
+    margin: 0 -30px; /* works 좌우 패딩 상쇄 */
     padding: 0 min(100px, 6.9444vw);
     height: min(1922px, 133.4722vw);
   }
@@ -609,14 +632,17 @@ img {
     grid-column: 1 / span 3;
     grid-row: 1;
   }
+
   .preview2 {
     grid-column: 3 / span 3;
     grid-row: 2;
   }
+
   .preview3 {
     grid-column: 1 / span 2;
     grid-row: 3;
   }
+
   .preview4 {
     grid-column: 2 / span 3;
     grid-row: 4;
